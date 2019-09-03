@@ -1,0 +1,25 @@
+{
+  "name": "dexag-contract-liquidity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConcourseOpen/DEXAG-Contract-Liquidity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ConcourseOpen/DEXAG-Contract-Liquidity/issues"
+  },
+  "homepage": "https://github.com/ConcourseOpen/DEXAG-Contract-Liquidity#readme",
+  "dependencies": {
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}

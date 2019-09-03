@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import BuyAndSendContract from "./contracts/BuyAndSend.json";
 import getWeb3 from "./utils/getWeb3";
+import * as request from "request-promise";
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { storageValue: 0, web3: null, accounts: null, contract: null, data: null };
 
   componentDidMount = async () => {
     try {
@@ -17,9 +18,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = BuyAndSendContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        BuyAndSendContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
@@ -38,15 +39,38 @@ class App extends Component {
   runExample = async () => {
     const { accounts, contract } = this.state;
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
+    const options = {
+      uri: 'https://api.dex.ag/trade?from=eth&to=dai&toAmount=1&dex=oasis&proxy=0xD3BeD3A8E3e6b24b740EAD108bA776e0Ad298588',
+      json: true // Automatically parses the JSON string in the response
+    };
+    const dexAgResponse = await request(options);
+    let { data, value } = dexAgResponse.trade
+    console.log(dexAgResponse)
+    let gasPrice = "2000000000";
+    if (dexAgResponse.metadata.query.dex === 'bancor') {
+      gasPrice = dexAgResponse.metadata.gasPrice;
+    }
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    await contract.methods.buyAndSend(data, accounts[0], '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359')
+                    .estimateGas({ from: '0xd0C81E82AbDdF29C6505d660f5bEBe60CDFf03c5', value: value}, (error,amt) => {
+                      console.log(amt);
+                    });
+    contract.methods.buyAndSend(data, accounts[0], '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359').send({ from: accounts[0], value: value, gasPrice: gasPrice})
+                    .on('transactionHash', (hash) => {
+                      console.log(hash);
+                    })
+                    .on('receipt', (receipt) => {
+                      console.log(receipt);
+                    })
+                    .on('error', (error) => {
+                      console.log(error);
+                    });
 
     // Update state with the result.
-    this.setState({ storageValue: response });
+    this.setState({ data: dexAgResponse.trade.data });
   };
+
+
 
   render() {
     if (!this.state.web3) {
@@ -54,17 +78,11 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
+        <h1>Buy and Send</h1>
         <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
+          Address: {this.state.accounts[0]} <br />
         </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <h2></h2>
       </div>
     );
   }
