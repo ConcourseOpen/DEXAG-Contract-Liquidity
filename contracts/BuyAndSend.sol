@@ -14,6 +14,9 @@ contract BuyAndSend {
   function buyAndSend(bytes memory _calldata, address receiver, IERC20 toToken) payable public {
     callProxy(_calldata, msg.value);
     toToken.safeTransfer(receiver, toToken.balanceOf(address(this)));
+    if (address(this).balance > 0) {
+      msg.sender.transfer(address(this).balance);
+    }
   }
 
   function callProxy(bytes memory _calldata, uint256 _value) internal {
