@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  color: white;
+  background: #283943;
+  width: 60%;
+  margin: auto;
+  position: relative;
+  bottom: -100px;
 }
 
 .App-logo {
@@ -18,15 +24,14 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App .select {
+  background: transparent;
+  color: white;
+  margin-left: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App .input {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
 }

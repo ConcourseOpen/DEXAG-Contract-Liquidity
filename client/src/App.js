@@ -31,11 +31,9 @@ class App extends Component {
       const accounts = await web3.eth.getAccounts();
 
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = BuyAndSendContract.networks[networkId];
       const instance = new web3.eth.Contract(
         BuyAndSendContract.abi,
-        deployedNetwork && deployedNetwork.address,
+        '0x60ff22Ca62be462a468901B0772D6385F4bFE931',
       );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
@@ -120,13 +118,10 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Buy and Send</h1>
-        <p>
-          Address: {this.state.accounts[0]} <br />
-        </p>
         <div>
           Send:
-          <input type='number' onChange={(e) => this.setAmount(e)} value={this.state.amount}></input> 
-          <select onChange={(e) => this.changeToken(e)}>
+          <input type='number' onChange={(e) => this.setAmount(e)} value={this.state.amount} className="input"></input> 
+          <select onChange={(e) => this.changeToken(e)} className="select">
             <option value='dai'>DAI</option>
             <option value='mkr'>MKR</option>
             <option value='bat'>BAT</option>
@@ -138,7 +133,7 @@ class App extends Component {
         </div>
         <div>
           To:
-          <input type='text' onChange={(e) => this.setReceiver(e)}></input>
+          <input type='text' onChange={(e) => this.setReceiver(e)} className='input'></input>
         </div>
         <div>
           <button onClick={(e) => this.buyAndSend()}>Go!</button>
