@@ -1,4 +1,3 @@
-const path = require("path");
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -21,12 +20,11 @@ const path = require("path");
 
 const HDWalletProvider = require('truffle-hdwallet-provider');
 
-const fs = require('fs');
-const infuraMainnet = fs.readFileSync(".infura").toString().trim();
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('truffle-hdwallet-provider');
+const infuraMainnet = '';
+const mnemonic = '';
 
 module.exports = {
-  contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   networks: {
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
@@ -48,9 +46,10 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 5000000   // Optimize for how many times you intend to run the code
+          runs: 200  // Optimize for how many times you intend to run the code
         }
       }
     }
   }
 }
+
